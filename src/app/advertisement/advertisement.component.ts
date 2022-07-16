@@ -16,20 +16,25 @@ export class AdvertisementComponent implements OnInit {
     price: 0,
     user: ''
   }
+  id: string | null = null;
+  
   submitting = false;
   
-  constructor(private advertisementService: AdvertisementService, private route: ActivatedRoute) { }
+  constructor(
+    private advertisementService: AdvertisementService, 
+    private route: ActivatedRoute, 
+    private router: Router
+  ) { }
 
   ngOnInit(): void {
-    const id = this.route.snapshot.paramMap.get('id');
-    this.advertisementService.get(id)
+    this.id = this.route.snapshot.paramMap.get('id');
+    this.advertisementService.get(this.id)
       .subscribe({
         next: (res) => {
           this.advertisement = res;
         },
         error: (e) => {
           console.error(e)
-          this.submitting = false;
         }
       })
   }
@@ -44,11 +49,12 @@ export class AdvertisementComponent implements OnInit {
 
     this.submitting = true;
 
-    this.advertisementService.create(data)
+    this.advertisementService.update(data, this.id)
       .subscribe({
         next: (res) => {
           console.log(res);
           this.submitting = false;
+          this.router.navigate(['/advertisements']);
         },
         error: (e) => {
           console.error(e)

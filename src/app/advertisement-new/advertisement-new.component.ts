@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { Advertisement } from '../models/advertisement.model';
 import { AdvertisementService } from '../services/advertisement.service';
 
@@ -18,7 +19,10 @@ export class AdvertisementNewComponent implements OnInit {
   }
   submitting = false;
 
-  constructor(private advertisementService: AdvertisementService) { }
+  constructor(
+    private advertisementService: AdvertisementService, 
+    private router: Router
+    ) { }
 
   ngOnInit(): void {
   }
@@ -38,6 +42,7 @@ export class AdvertisementNewComponent implements OnInit {
         next: (res) => {
           console.log(res);
           this.submitting = false;
+          this.router.navigate(['/advertisements']);
         },
         error: (e) => {
           console.error(e)
