@@ -1,1 +1,27 @@
-<p>advertisement works!</p>
+<div class="submit-form m-4">
+  <div class="mb-3 row">
+    <label for="title" class="col-sm-2 col-form-label">Title</label>
+    <div class="col-sm-10">
+      <input type="text" class="form-control" id="title" [(ngModel)]="advertisement.title" />
+    </div>
+  </div>
+  <div class="mb-3 row">
+    <label for="description" class="col-sm-2 col-form-label">Description</label>
+    <div class="col-sm-10">
+      <textarea rows="3" class="form-control" id="description" [(ngModel)]="advertisement.description"></textarea>
+    </div>
+  </div>
+  <div class="mb-3 row">
+    <label for="location" class="col-sm-2 col-form-label">Location</label>
+    <div class="col-sm-10">
+      <input type="text" class="form-control" id="location" [(ngModel)]="advertisement.location" />
+    </div>
+  </div>
+  <div class="mb-3 row">
+    <label for="price" class="col-sm-2 col-form-label">Price</label>
+    <div class="col-sm-10">
+      <input type="number" class="form-control" id="price" [(ngModel)]="advertisement.price" />
+    </div>
+  </div>
+  <button *ngIf="!submitting" type="button" class="btn btn-primary my-4" (click)="updateAdvertisement()">Submit</button>
+</div>
