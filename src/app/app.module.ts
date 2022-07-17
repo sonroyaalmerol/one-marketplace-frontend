@@ -6,18 +6,18 @@ import { HttpClientModule } from '@angular/common/http';
 
 import { AppComponent } from './app.component';
 import { AdvertisementListComponent } from './advertisement-list/advertisement-list.component';
-import { AdvertisementComponent } from './advertisement/advertisement.component';
 import { AdvertisementNewComponent } from './advertisement-new/advertisement-new.component';
 import { HomeComponent } from './home/home.component';
 import { FormsModule } from '@angular/forms';
+import { AdvertisementEditComponent } from './advertisement-edit/advertisement-edit.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     AdvertisementListComponent,
-    AdvertisementComponent,
     AdvertisementNewComponent,
-    HomeComponent
+    HomeComponent,
+    AdvertisementEditComponent
   ],
   imports: [
     BrowserModule,
@@ -27,7 +27,7 @@ import { FormsModule } from '@angular/forms';
       {path: '', component: HomeComponent},
       {path: 'advertisements', component: AdvertisementListComponent},
       {path: 'advertisements/new', component: AdvertisementNewComponent},
-      {path: 'advertisements/:id', component: AdvertisementComponent},
+      {path: 'advertisements/:id', component: AdvertisementEditComponent},
     ]),
   ],
   providers: [],

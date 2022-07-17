@@ -1,14 +1,14 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Advertisement } from '../models/advertisement.model';
 import { AdvertisementService } from '../services/advertisement.service';
 
 @Component({
-  selector: 'app-advertisement',
-  templateUrl: './advertisement.component.html',
-  styleUrls: ['./advertisement.component.css']
+  selector: 'app-advertisement-edit',
+  templateUrl: './advertisement-edit.component.html',
+  styleUrls: ['./advertisement-edit.component.css']
 })
-export class AdvertisementComponent implements OnInit {
+export class AdvertisementEditComponent implements OnInit {
   advertisement: Advertisement = {
     title: '',
     description: '',
@@ -27,8 +27,9 @@ export class AdvertisementComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.id = this.route.snapshot.paramMap.get('id');
-    this.advertisementService.get(this.id)
+    this.route.paramMap.subscribe(params => { 
+      this.id = params.get('id');
+      this.advertisementService.get(this.id)
       .subscribe({
         next: (res) => {
           this.advertisement = res;
@@ -36,7 +37,8 @@ export class AdvertisementComponent implements OnInit {
         error: (e) => {
           console.error(e)
         }
-      })
+      });
+    });
   }
 
   updateAdvertisement(): void {
@@ -49,7 +51,7 @@ export class AdvertisementComponent implements OnInit {
 
     this.submitting = true;
 
-    this.advertisementService.update(data, this.id)
+    this.advertisementService.update(this.id, data)
       .subscribe({
         next: (res) => {
           console.log(res);
@@ -62,4 +64,5 @@ export class AdvertisementComponent implements OnInit {
         }
       });
   }
+
 }
