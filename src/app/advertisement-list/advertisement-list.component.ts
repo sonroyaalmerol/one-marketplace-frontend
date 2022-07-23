@@ -41,7 +41,7 @@ export class AdvertisementListComponent implements OnInit {
           console.log(res);
           this.refreshList();
         },
-        error: (e) => console.error(e)
+        error: (e) => window.alert(e.message)
       })
   }
   removeAllAdvertisements(): void {
@@ -51,7 +51,7 @@ export class AdvertisementListComponent implements OnInit {
           console.log(res);
           this.refreshList();
         },
-        error: (e) => console.error(e)
+        error: (e) => window.alert(e.message)
       });
   }
 }

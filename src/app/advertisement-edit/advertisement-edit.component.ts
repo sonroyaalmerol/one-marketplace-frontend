@@ -35,7 +35,7 @@ export class AdvertisementEditComponent implements OnInit {
           this.advertisement = res;
         },
         error: (e) => {
-          console.error(e)
+          window.alert(e.message);
         }
       });
     });
@@ -59,7 +59,7 @@ export class AdvertisementEditComponent implements OnInit {
           this.router.navigate(['/advertisements']);
         },
         error: (e) => {
-          console.error(e)
+          window.alert(e.message);
           this.submitting = false;
         }
       });

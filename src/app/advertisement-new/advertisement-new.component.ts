@@ -45,7 +45,7 @@ export class AdvertisementNewComponent implements OnInit {
           this.router.navigate(['/advertisements']);
         },
         error: (e) => {
-          console.error(e)
+          window.alert(e.message);
           this.submitting = false;
         }
       });
