@@ -3,6 +3,7 @@ import { Advertisement } from 'src/app/models/advertisement.model';
 import { User } from 'src/app/models/user.model';
 import { UserService } from 'src/app/services/user.service';
 import * as numeral from 'numeral';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-advertisement-card',
@@ -11,6 +12,7 @@ import * as numeral from 'numeral';
   standalone: true
 })
 export class AdvertisementCardComponent implements OnInit {
+  subscriptions: Subscription[] = [];
   @Input() advertisement?: Advertisement;
   owner?: User;
 
@@ -27,13 +29,18 @@ export class AdvertisementCardComponent implements OnInit {
   }
 
   getOwnerDetails(): void {
-    this.userService.get(this.advertisement?.user)
-      .subscribe({
-        next: (data) => {
-          this.owner = data;
-        },
-        error: (e) => console.error(e)
-      });
+    this.subscriptions.push(
+      this.userService.get(this.advertisement?.user)
+        .subscribe({
+          next: (data) => {
+            this.owner = data;
+          },
+          error: (e) => console.error(e)
+        })
+    );
   }
 
+  ngOnDestroy(): void {
+    this.subscriptions.forEach((subscription) => subscription.unsubscribe());
+  }
 }

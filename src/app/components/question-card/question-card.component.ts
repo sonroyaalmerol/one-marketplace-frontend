@@ -11,6 +11,7 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-question-card',
@@ -20,6 +21,7 @@ import { ToastrService } from 'ngx-toastr';
   standalone: true
 })
 export class QuestionCardComponent implements OnInit {
+  subscriptions: Subscription[] = [];
   @Input() question?: Question;
   @Input() advertisement?: Advertisement;
 
@@ -45,13 +47,16 @@ export class QuestionCardComponent implements OnInit {
   }
 
   getAnswer(): void {
-    this.advertisementService.getAnswer(this.advertisement?._id, this.question?._id)
+    this.subscriptions.push(
+      this.advertisementService.getAnswer(this.advertisement?._id, this.question?._id)
       .subscribe({
         next: (data) => {
           this.answer = data;
         },
         error: (e) => this.toast.error(e.message, 'Error!')
-      });
+      })
+    );
+    
   }
 
   submitAnswer(): void {
@@ -60,18 +65,22 @@ export class QuestionCardComponent implements OnInit {
     };
 
     if (this.newAnswerContent?.trim().length ?? 0 > 0) {
-      this.advertisementService.createAnswer(this.advertisement?._id, this.question?._id, data)
-        .subscribe({
-          next: (res) => {
-            console.log(res);
-            this.ngOnInit();
-            this.toast.success('Successfully answered inquiry!', 'Success!')
-            document.getElementById(`close-modal-${this.question?._id}`)?.click();
-          },
-          error: (e) => {
-            this.toast.error(e.message, 'Error!');
-          }
-        });
+      this.subscriptions.push(
+        this.advertisementService.createAnswer(this.advertisement?._id, this.question?._id, data)
+          .subscribe({
+            next: (res) => {
+              console.log(res);
+              this.ngOnDestroy();
+              this.ngOnInit();
+              this.toast.success('Successfully answered inquiry!', 'Success!')
+              document.getElementById(`close-modal-${this.question?._id}`)?.click();
+            },
+            error: (e) => {
+              this.toast.error(e.message, 'Error!');
+            }
+          })
+      );
+      
     }
   }
 
@@ -81,10 +90,12 @@ export class QuestionCardComponent implements OnInit {
     };
 
     if (this.newAnswerContent?.trim().length ?? 0 > 0) {
-      this.advertisementService.editAnswer(this.advertisement?._id, this.question?._id, data)
+      this.subscriptions.push(
+        this.advertisementService.editAnswer(this.advertisement?._id, this.question?._id, data)
         .subscribe({
           next: (res) => {
             console.log(res);
+            this.ngOnDestroy();
             this.ngOnInit();
             this.toast.success('Successfully updated inquiry answer!', 'Success!')
 
@@ -93,15 +104,19 @@ export class QuestionCardComponent implements OnInit {
           error: (e) => {
             this.toast.error(e.message, 'Error!');
           }
-        });
+        })
+      )
+      
     }
   }
 
   deleteAnswer(): void {
-    this.advertisementService.deleteAnswer(this.advertisement?._id, this.question?._id)
+    this.subscriptions.push(
+      this.advertisementService.deleteAnswer(this.advertisement?._id, this.question?._id)
       .subscribe({
         next: (res) => {
           console.log(res);
+          this.ngOnDestroy();
           this.ngOnInit();
           
           this.toast.success('Successfully deleted answer!', 'Success!')
@@ -109,6 +124,12 @@ export class QuestionCardComponent implements OnInit {
         error: (e) => {
           this.toast.error(e.message, 'Error!');
         }
-      });
+      })
+    )
+    
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.forEach((subscription) => subscription.unsubscribe());
   }
 }

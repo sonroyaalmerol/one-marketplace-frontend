@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { Subscription } from 'rxjs';
 import { Category } from 'src/app/models/category.model';
 import { CategoryService } from 'src/app/services/category.service';
 import { Advertisement } from '../../../models/advertisement.model';
@@ -12,6 +13,9 @@ import { AdvertisementService } from '../../../services/advertisement.service';
   styleUrls: ['./edit.component.css']
 })
 export class AdvertisementEditComponent implements OnInit {
+  subscriptions: Subscription[] = [];
+
+
   advertisement: Advertisement = {
     title: '',
     description: '',
@@ -38,22 +42,26 @@ export class AdvertisementEditComponent implements OnInit {
 
   ngOnInit(): void {
     this.getAllCategories();
-    this.route.paramMap.subscribe(params => { 
-      this.id = params.get('id');
-      this.advertisementService.get(this.id)
-      .subscribe({
-        next: (res) => {
-          this.advertisement = res;
-        },
-        error: (e) => {
-          this.toast.error(e.message, 'Error!');
-        }
-      });
-    });
+    this.subscriptions.push(
+      this.route.paramMap.subscribe(params => { 
+        this.id = params.get('id');
+        this.advertisementService.get(this.id)
+        .subscribe({
+          next: (res) => {
+            this.advertisement = res;
+          },
+          error: (e) => {
+            this.toast.error(e.message, 'Error!');
+          }
+        });
+      })
+    );
+    
   }
 
   getAllCategories(): void {
-    this.categoryService.getAll()
+    this.subscriptions.push(
+      this.categoryService.getAll()
       .subscribe({
         next: (res) => {
           this.categories = res;
@@ -61,7 +69,9 @@ export class AdvertisementEditComponent implements OnInit {
         error: (e) => {
           this.toast.error(e.message, 'Error!');
         }
-      });
+      })
+    )
+    
   }
 
   updateAdvertisement(): void {
@@ -77,7 +87,8 @@ export class AdvertisementEditComponent implements OnInit {
 
     this.submitting = true;
 
-    this.advertisementService.update(this.id, data)
+    this.subscriptions.push(
+      this.advertisementService.update(this.id, data)
       .subscribe({
         next: (res) => {
           this.submitting = false;
@@ -88,7 +99,13 @@ export class AdvertisementEditComponent implements OnInit {
           this.toast.error(e.message, 'Error!');
           this.submitting = false;
         }
-      });
+      })
+    )
+    
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.forEach((subscription) => subscription.unsubscribe());
   }
 
 }

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { Category } from 'src/app/models/category.model';
 import { User } from 'src/app/models/user.model';
 import { AuthService } from 'src/app/services/auth.service';
@@ -12,6 +13,7 @@ import { UserService } from 'src/app/services/user.service';
   styleUrls: ['./navbar.component.css']
 })
 export class NavBarComponent implements OnInit {
+  subscriptions: Subscription[] = [];
   categories?: Category[];
   searchQuery?: string;
   fullName?: string;
@@ -28,23 +30,27 @@ export class NavBarComponent implements OnInit {
   }
 
   retrieveCategories(): void {
-    this.categoryService.getAll()
+    this.subscriptions.push(
+      this.categoryService.getAll()
       .subscribe({
         next: (data) => {
           this.categories = data;
         },
         error: (e) => console.error(e)
-      });
+      })
+    );
   }
 
   getUserFullName(): void {
-    this.userService.get(this.authService.getCurrentUserId())
+    this.subscriptions.push(
+      this.userService.get(this.authService.getCurrentUserId())
       .subscribe({
         next: (data) => {
           this.fullName = `${data.firstName} ${data.lastName}`;
         },
         error: (e) => console.error(e)
-      });
+      })
+    );
   }
 
   logout(): void {
@@ -60,5 +66,9 @@ export class NavBarComponent implements OnInit {
     let currentUserId = this.authService.getCurrentUserId();
 
     this.router.navigate([`/profiles/${currentUserId}`]);
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.forEach((subscription) => subscription.unsubscribe());
   }
 }

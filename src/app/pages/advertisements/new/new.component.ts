@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { Subscription } from 'rxjs';
 import { Category } from 'src/app/models/category.model';
 import { CategoryService } from 'src/app/services/category.service';
 import { Advertisement } from '../../../models/advertisement.model';
@@ -12,6 +13,7 @@ import { AdvertisementService } from '../../../services/advertisement.service';
   styleUrls: ['./new.component.css']
 })
 export class AdvertisementNewComponent implements OnInit {
+  subscriptions: Subscription[] = [];
 
   advertisement: Advertisement = {
     title: '',
@@ -37,7 +39,8 @@ export class AdvertisementNewComponent implements OnInit {
   }
 
   getAllCategories(): void {
-    this.categoryService.getAll()
+    this.subscriptions.push(
+      this.categoryService.getAll()
       .subscribe({
         next: (res) => {
           this.categories = res;
@@ -45,7 +48,9 @@ export class AdvertisementNewComponent implements OnInit {
         error: (e) => {
           this.toast.error(e.message, 'Error!');
         }
-      });
+      })
+    )
+    
   }
 
   saveAdvertisement(): void {
@@ -61,7 +66,8 @@ export class AdvertisementNewComponent implements OnInit {
 
     this.submitting = true;
 
-    this.advertisementService.create(data)
+    this.subscriptions.push(
+      this.advertisementService.create(data)
       .subscribe({
         next: (res) => {
           console.log(res);
@@ -72,6 +78,12 @@ export class AdvertisementNewComponent implements OnInit {
           this.toast.error(e.message, 'Error!');
           this.submitting = false;
         }
-      });
+      })
+    )
+    
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.forEach((subscription) => subscription.unsubscribe());
   }
 }

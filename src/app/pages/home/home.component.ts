@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
+import { Subscription } from 'rxjs';
 import { AdvertisementCardComponent } from 'src/app/components/advertisement-card/advertisement-card.component';
 import { Advertisement } from 'src/app/models/advertisement.model';
 import { AdvertisementService } from 'src/app/services/advertisement.service';
@@ -13,6 +14,7 @@ import { AdvertisementService } from 'src/app/services/advertisement.service';
   standalone: true
 })
 export class HomeComponent implements OnInit {
+  subscriptions: Subscription[] = [];
 
   advertisements?: Advertisement[];
   currentAdvertisement: Advertisement = {};
@@ -26,14 +28,17 @@ export class HomeComponent implements OnInit {
     this.retrieveAdvertisements();
   }
   retrieveAdvertisements(): void {
-    this.advertisementService.getAll()
+    this.subscriptions.push(
+      this.advertisementService.getAll()
       .subscribe({
         next: (data) => {
           this.advertisements = data;
           console.log(data);
         },
         error: (e) => this.toast.error(e.message, 'Error!')
-      });
+      })
+    )
+    
   }
   refreshList(): void {
     this.retrieveAdvertisements();
@@ -44,4 +49,7 @@ export class HomeComponent implements OnInit {
     return `/advertisements/${advertisement._id}`;
   }
 
+  ngOnDestroy(): void {
+    this.subscriptions.forEach((subscription) => subscription.unsubscribe());
+  }
 }

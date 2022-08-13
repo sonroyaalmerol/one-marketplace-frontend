@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { Subscription } from 'rxjs';
 import { AuthService } from '../../services/auth.service';
 
 @Component({
@@ -9,6 +10,7 @@ import { AuthService } from '../../services/auth.service';
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
+  subscriptions: Subscription[] = [];
   login = {
     username: '',
     password: ''
@@ -28,7 +30,8 @@ export class LoginComponent implements OnInit {
   loginAuth(): void {
     this.submitting = true;
 
-    this.authService.login(this.login)
+    this.subscriptions.push(
+      this.authService.login(this.login)
       .subscribe({
         next: (res) => {
           console.log(res);
@@ -41,7 +44,12 @@ export class LoginComponent implements OnInit {
           this.toast.error(e.message, 'Error!');
           this.submitting = false;
         }
-      });
+      })
+    )
+    
   }
 
+  ngOnDestroy(): void {
+    this.subscriptions.forEach((subscription) => subscription.unsubscribe());
+  }
 }

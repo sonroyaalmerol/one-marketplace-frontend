@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { Subscription } from 'rxjs';
 import { AdvertisementCardComponent } from 'src/app/components/advertisement-card/advertisement-card.component';
 import { Advertisement } from 'src/app/models/advertisement.model';
 import { User } from 'src/app/models/user.model';
@@ -17,6 +18,7 @@ import { UserService } from 'src/app/services/user.service';
   standalone: true
 })
 export class ProfileComponent implements OnInit {
+  subscriptions: Subscription[] = [];
   id: string | null = null;
 
   profile?: User
@@ -41,15 +43,19 @@ export class ProfileComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.route.paramMap.subscribe(params => { 
-      this.id = params.get('id');
-      this.getUser();
-      this.getAdvertisementsOwned();
-    });
+    this.subscriptions.push(
+      this.route.paramMap.subscribe(params => { 
+        this.id = params.get('id');
+        this.getUser();
+        this.getAdvertisementsOwned();
+      })
+    )
+    
   }
 
   getUser(): void {
-    this.userService.get(this.id)
+    this.subscriptions.push(
+      this.userService.get(this.id)
       .subscribe({
         next: (res) => {
           this.profile = res;
@@ -60,25 +66,32 @@ export class ProfileComponent implements OnInit {
         error: (e) => {
           this.toast.error('Error!', e.message);
         }
-      });
+      })
+    )
+    
   }
 
   editUser(): void {
-    this.userService.update(this.id, this.profileForm)
+    this.subscriptions.push(
+      this.userService.update(this.id, this.profileForm)
       .subscribe({
         next: (res) => {
           document.getElementById('close-modal')?.click();
           this.toast.success("Successfully updated user!", "Success!");
+          this.ngOnDestroy();
           this.ngOnInit();
         },
         error: (e) => {
           this.toast.error('Error!', e.message);
         }
-      });
+      })
+    )
+    
   }
 
   getAdvertisementsOwned(): void {
-    this.userService.getAdvertisements(this.id)
+    this.subscriptions.push(
+      this.userService.getAdvertisements(this.id)
       .subscribe({
         next: (res) => {
           this.advertisements = res;
@@ -86,7 +99,12 @@ export class ProfileComponent implements OnInit {
         error: (e) => {
           this.toast.error('Error!', e.message);
         }
-      });
+      })
+    )
+    
   }
 
+  ngOnDestroy(): void {
+    this.subscriptions.forEach((subscription) => subscription.unsubscribe());
+  }
 }

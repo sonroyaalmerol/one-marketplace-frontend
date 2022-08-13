@@ -16,17 +16,7 @@ export class AuthInterceptor implements HttpInterceptor {
                 Authorization: "Bearer " + authToken
             }
         });
-        const nextHandle = next.handle(req);
 
-        nextHandle.subscribe({ error: (err) => {
-            if (err instanceof HttpErrorResponse) {
-                if (err.status === 401) {
-                    this.toast.error(err.message, "Authentication expired!");
-                    this.authService.doLogout();
-                }
-            }
-        } });
-
-        return nextHandle;
+        return next.handle(req);
     }
 }
