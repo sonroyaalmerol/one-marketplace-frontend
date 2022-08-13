@@ -6,13 +6,13 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthInterceptor } from './interceptors/auth.interceptor';
 
 import { AppComponent } from './app.component';
-import { AdvertisementListComponent } from './advertisement-list/advertisement-list.component';
-import { AdvertisementNewComponent } from './advertisement-new/advertisement-new.component';
-import { HomeComponent } from './home/home.component';
+import { AdvertisementListComponent } from './pages/advertisements/list/list.component';
+import { AdvertisementNewComponent } from './pages/advertisements/new/new.component';
+import { HomeComponent } from './pages/home/home.component';
 import { FormsModule } from '@angular/forms';
-import { AdvertisementEditComponent } from './advertisement-edit/advertisement-edit.component';
-import { LoginComponent } from './login/login.component';
-import { RegisterComponent } from './register/register.component';
+import { AdvertisementEditComponent } from './pages/advertisements/edit/edit.component';
+import { LoginComponent } from './pages/login/login.component';
+import { RegisterComponent } from './pages/register/register.component';
 
 @NgModule({
   declarations: [

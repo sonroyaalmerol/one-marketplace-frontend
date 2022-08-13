@@ -1,15 +1,14 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-import { Advertisement } from '../models/advertisement.model';
-import { AdvertisementService } from '../services/advertisement.service';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Advertisement } from '../../../models/advertisement.model';
+import { AdvertisementService } from '../../../services/advertisement.service';
 
 @Component({
-  selector: 'app-advertisement-new',
-  templateUrl: './advertisement-new.component.html',
-  styleUrls: ['./advertisement-new.component.css']
+  selector: 'app-advertisement-edit',
+  templateUrl: './edit.component.html',
+  styleUrls: ['./edit.component.css']
 })
-export class AdvertisementNewComponent implements OnInit {
-
+export class AdvertisementEditComponent implements OnInit {
   advertisement: Advertisement = {
     title: '',
     description: '',
@@ -17,17 +16,32 @@ export class AdvertisementNewComponent implements OnInit {
     price: 0,
     user: ''
   }
+  id: string | null = null;
+  
   submitting = false;
-
+  
   constructor(
     private advertisementService: AdvertisementService, 
+    private route: ActivatedRoute, 
     private router: Router
-    ) { }
+  ) { }
 
   ngOnInit(): void {
+    this.route.paramMap.subscribe(params => { 
+      this.id = params.get('id');
+      this.advertisementService.get(this.id)
+      .subscribe({
+        next: (res) => {
+          this.advertisement = res;
+        },
+        error: (e) => {
+          window.alert(e.message);
+        }
+      });
+    });
   }
 
-  saveAdvertisement(): void {
+  updateAdvertisement(): void {
     const data = {
       title: this.advertisement.title,
       description: this.advertisement.description,
@@ -37,7 +51,7 @@ export class AdvertisementNewComponent implements OnInit {
 
     this.submitting = true;
 
-    this.advertisementService.create(data)
+    this.advertisementService.update(this.id, data)
       .subscribe({
         next: (res) => {
           console.log(res);
@@ -50,4 +64,5 @@ export class AdvertisementNewComponent implements OnInit {
         }
       });
   }
+
 }

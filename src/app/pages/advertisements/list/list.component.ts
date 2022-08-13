@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { Advertisement } from '../models/advertisement.model';
-import { AdvertisementService } from '../services/advertisement.service';
+import { Advertisement } from '../../../models/advertisement.model';
+import { AdvertisementService } from '../../../services/advertisement.service';
 
 @Component({
   selector: 'app-advertisement-list',
-  templateUrl: './advertisement-list.component.html',
-  styleUrls: ['./advertisement-list.component.css']
+  templateUrl: './list.component.html',
+  styleUrls: ['./list.component.css']
 })
 export class AdvertisementListComponent implements OnInit {
   advertisements?: Advertisement[];
