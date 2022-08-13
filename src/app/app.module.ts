@@ -28,15 +28,16 @@ import { ToastrModule } from 'ngx-toastr';
     AdvertisementEditComponent,
     LoginComponent,
     RegisterComponent,
-    NavBarComponent,
-    ProfileComponent
+    NavBarComponent
   ],
   imports: [
     BrowserModule,
     HttpClientModule,
     FormsModule,
     BrowserAnimationsModule,
-    ToastrModule.forRoot(),
+    ToastrModule.forRoot({
+      positionClass: 'toast-bottom-right'
+    }),
     RouterModule.forRoot([
       {path: '', component: HomeComponent},
       {path: 'advertisements/search', component: AdvertisementSearchComponent},

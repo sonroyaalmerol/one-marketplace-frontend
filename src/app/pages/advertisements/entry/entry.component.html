@@ -4,13 +4,13 @@
   </div>
   <div class="col-sm-8">
     <h1>{{ advertisement.title }}</h1>
+    <span *ngIf="advertisement.disabled" class="badge bg-secondary">Advertisement Disabled</span>
     <h2 class="my-4">{{ price }}</h2>
     <small>Advertised by: <a href="/profiles/{{ owner?._id }}" type="button" class="btn btn-light">{{ owner?.firstName }} {{ owner?.lastName }}</a></small>
     <p class="my-4">{{ advertisement.description }}</p>
     <p class="my-4">Location: {{ advertisement.location }}</p>
     <button type="button" class="btn btn-primary" *ngIf="!isOwnedByCurrentUser" data-bs-toggle="modal" data-bs-target="#inquireModal">Inquire</button>
     <a type="button" class="btn btn-primary" *ngIf="isOwnedByCurrentUser" href="/advertisements/{{ advertisement._id }}/edit">Edit</a>
-    <button type="button" class="btn btn-danger ms-2" *ngIf="isOwnedByCurrentUser" (click)="deleteAdvertisement()">Delete Advertisement</button>
   </div>
 </div>
 

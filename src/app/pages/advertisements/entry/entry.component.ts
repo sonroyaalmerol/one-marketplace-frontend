@@ -76,21 +76,6 @@ export class AdvertisementEntryComponent implements OnInit {
     return numeral(this.advertisement.price).format('$0,0.00');
   }
   
-  deleteAdvertisement(): void {
-    this.advertisementService.delete(this.advertisement._id).subscribe({
-      next: (res) => {
-        this.submitting = false;
-        this.ngOnInit();
-        this.toast.success('Successfully deleted advertisement!', 'Success!')
-        this.router.navigate(['/']);
-      },
-      error: (e) => {
-        this.toast.error(e.message, 'Error!');
-        this.submitting = false;
-      }
-    });
-  }
-  
   submitQuestion(): void {
     const data = {
       content: this.newQuestionContent

@@ -43,25 +43,5 @@ export class HomeComponent implements OnInit {
   generateEditUrl(advertisement: Advertisement): string {
     return `/advertisements/${advertisement._id}`;
   }
-  deleteAdvertisement(advertisement: Advertisement): void {
-    this.advertisementService.delete(advertisement._id)
-      .subscribe({
-        next: (res) => {
-          console.log(res);
-          this.refreshList();
-        },
-        error: (e) => this.toast.error(e.message, 'Error!')
-      })
-  }
-  removeAllAdvertisements(): void {
-    this.advertisementService.deleteAll()
-      .subscribe({
-        next: (res) => {
-          console.log(res);
-          this.refreshList();
-        },
-        error: (e) => this.toast.error(e.message, 'Error!')
-      });
-  }
 
 }

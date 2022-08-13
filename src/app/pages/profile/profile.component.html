@@ -1,9 +1,60 @@
-<div class="row my-4">
+<div class="row my-4 mb-5">
   <div class="col-sm-4">
     <img class="card-img-top" src="https://ui-avatars.com/api/?name={{ profile?.firstName }} {{ profile?.lastName }}" alt="{{ profile?.firstName }} {{ profile?.lastName }}">
   </div>
   <div class="col-sm-8">
     <h1>{{ profile?.firstName }} {{ profile?.lastName }}</h1>
-    <a type="button" class="btn btn-primary">Edit</a>
+    <p class="mb-5">@{{ profile?.username }}</p>
+    <p>Email: {{ profile?.email }}</p>
+    <div class="mt-5">
+      <button class="btn btn-primary" *ngIf="isCurrentUser" data-bs-toggle="modal" data-bs-target="#profileModal">Edit</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="profileModal" tabindex="-1" aria-labelledby="profileModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="profileModalLabel">Profile Edit Form</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="submit-form m-4">
+          <div class="mb-3 row">
+            <label for="question" class="col-sm-4 col-form-label">First Name</label>
+            <div class="col-sm-8">
+              <input type="text" class="form-control" id="question" [(ngModel)]="profileForm.firstName" />
+            </div>
+          </div>
+          <div class="mb-3 row">
+            <label for="question" class="col-sm-4 col-form-label">Last Name</label>
+            <div class="col-sm-8">
+              <input type="text" class="form-control" id="question" [(ngModel)]="profileForm.lastName" />
+            </div>
+          </div>
+          <div class="mb-3 row">
+            <label for="question" class="col-sm-4 col-form-label">Email</label>
+            <div class="col-sm-8">
+              <input type="email" class="form-control" id="question" [(ngModel)]="profileForm.email" />
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" id="close-modal" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" (click)="editUser()">Submit</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<h1 class="m-4 mt-5">Posted Advertisements</h1>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-sm-6 col-md-6 col-lg-4 col-xl-3" *ngFor="let advertisement of advertisements">
+      <app-advertisement-card [advertisement]="advertisement"></app-advertisement-card>
+    </div>
   </div>
 </div>
