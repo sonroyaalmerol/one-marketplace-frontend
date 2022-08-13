@@ -20,7 +20,7 @@
             </div>
           </li>
           <li class="nav-item dropdown d-none d-lg-flex">
-            <a class="nav-link" href="/advertisements/new" id="navbarDropdown" role="button" aria-expanded="false">
+            <a *ngIf="this.authService.isLoggedIn" class="nav-link" href="/advertisements/new" id="navbarDropdown" role="button" aria-expanded="false">
               <h3><i class="bi bi-plus"></i></h3>
             </a>
             <a class="nav-link" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
