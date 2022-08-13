@@ -18,9 +18,36 @@
     </div>
   </div>
   <div class="mb-3 row">
+    <label for="category" class="col-sm-2 col-form-label">Category</label>
+    <div class="col-sm-10">
+      <select class="form-select" id="category" aria-label="Category" [(ngModel)]="advertisement.category">
+        <option value="{{category._id}}" *ngFor="let category of categories">{{category.title}}</option>
+      </select>
+    </div>
+  </div>
+  <div class="mb-3 row">
     <label for="price" class="col-sm-2 col-form-label">Price</label>
     <div class="col-sm-10">
       <input type="number" class="form-control" id="price" value="" [(ngModel)]="advertisement.price" />
+    </div>
+  </div>
+  <div class="mb-3 row">
+    <label for="price" class="col-sm-2 col-form-label">Expire Date</label>
+    <div class="col-sm-10">
+      <input type="date" class="form-control" id="expire-date" 
+        [ngModel]="advertisement.expiresAt | date: 'yyyy-MM-dd'"
+        (ngModelChange)="advertisement.expiresAt = $event"
+        [value]="advertisement.expiresAt | date: 'yyyy-MM-dd'"
+      />
+    </div>
+  </div>
+  <div class="mb-3 row ps-5">
+    <div class="form-check">
+      <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" [(ngModel)]="advertisement.disabled"
+      [ngModelOptions]="{standalone: true}">
+      <label class="form-check-label" for="flexCheckDefault">
+        Disable Advertisement
+      </label>
     </div>
   </div>
   <button *ngIf="!submitting" type="button" class="btn btn-primary my-4" (click)="saveAdvertisement()">Submit</button>

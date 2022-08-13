@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
+import { Category } from 'src/app/models/category.model';
+import { CategoryService } from 'src/app/services/category.service';
 import { Advertisement } from '../../../models/advertisement.model';
 import { AdvertisementService } from '../../../services/advertisement.service';
 
@@ -14,19 +17,27 @@ export class AdvertisementEditComponent implements OnInit {
     description: '',
     location: '',
     price: 0,
-    user: ''
+    user: '',
+    expiresAt: new Date(),
+    disabled: false
   }
+
+  categories?: Category[];
+
   id: string | null = null;
   
   submitting = false;
   
   constructor(
     private advertisementService: AdvertisementService, 
+    private categoryService: CategoryService,
     private route: ActivatedRoute, 
-    private router: Router
+    private router: Router,
+    private toast: ToastrService
   ) { }
 
   ngOnInit(): void {
+    this.getAllCategories();
     this.route.paramMap.subscribe(params => { 
       this.id = params.get('id');
       this.advertisementService.get(this.id)
@@ -35,10 +46,22 @@ export class AdvertisementEditComponent implements OnInit {
           this.advertisement = res;
         },
         error: (e) => {
-          window.alert(e.message);
+          this.toast.error(e.message, 'Error!');
         }
       });
     });
+  }
+
+  getAllCategories(): void {
+    this.categoryService.getAll()
+      .subscribe({
+        next: (res) => {
+          this.categories = res;
+        },
+        error: (e) => {
+          this.toast.error(e.message, 'Error!');
+        }
+      });
   }
 
   updateAdvertisement(): void {
@@ -46,7 +69,10 @@ export class AdvertisementEditComponent implements OnInit {
       title: this.advertisement.title,
       description: this.advertisement.description,
       location: this.advertisement.location,
-      price: this.advertisement.price
+      price: this.advertisement.price,
+      expiresAt: this.advertisement.expiresAt,
+      disabled: this.advertisement.disabled,
+      category: this.advertisement.category
     };
 
     this.submitting = true;
@@ -54,12 +80,12 @@ export class AdvertisementEditComponent implements OnInit {
     this.advertisementService.update(this.id, data)
       .subscribe({
         next: (res) => {
-          console.log(res);
           this.submitting = false;
-          this.router.navigate(['/advertisements']);
+          this.toast.success('Successfully updated advertisement!', 'Success!')
+          this.router.navigate([`/advertisements/${this.id}`]);
         },
         error: (e) => {
-          window.alert(e.message);
+          this.toast.error(e.message, 'Error!');
           this.submitting = false;
         }
       });

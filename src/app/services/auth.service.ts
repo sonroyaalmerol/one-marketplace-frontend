@@ -34,6 +34,7 @@ export class AuthService {
       localStorage.setItem('access_token', res.token);
       this.getSelfProfile().subscribe((res) => {
         this.currentUser = res;
+        localStorage.setItem('user_id', res._id);
         this.router.navigateByUrl('/')
       });
     });
@@ -43,12 +44,17 @@ export class AuthService {
   getToken() {
     return localStorage.getItem('access_token');
   }
+  getCurrentUserId() {
+    return localStorage.getItem('user_id');
+  }
+
   get isLoggedIn(): boolean {
     let authToken = localStorage.getItem('access_token');
     return authToken !== null ? true : false;
   }
   doLogout() {
     let removeToken = localStorage.removeItem('access_token');
+    localStorage.removeItem('user_id');
     if (removeToken == null) {
       this.router.navigateByUrl('/login')
     }
@@ -62,16 +68,7 @@ export class AuthService {
       catchError(this.handleError)
     );
   }
-  // User profile
-  getUserProfile(id: any): Observable<any> {
-    let api = `${baseUrl}/${id}`;
-    return this.http.get(api, { headers: this.headers }).pipe(
-      map((res) => {
-        return res || {};
-      }),
-      catchError(this.handleError)
-    );
-  }
+
   // Error
   handleError(error: HttpErrorResponse) {
     let msg = '';

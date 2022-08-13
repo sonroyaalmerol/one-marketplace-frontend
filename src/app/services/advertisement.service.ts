@@ -16,6 +16,9 @@ export class AdvertisementService {
   getAll(): Observable<Advertisement[]> {
     return this.http.get<Advertisement[]>(baseUrl);
   }
+  search(query: any): Observable<Advertisement[]> {
+    return this.http.get<Advertisement[]>(`${baseUrl}/search?query=${query}`);
+  }
   get(id: any): Observable<any> {
     return this.http.get<Advertisement>(`${baseUrl}/${id}`);
   }

@@ -1,0 +1,42 @@
+<div class="card my-5" style="width: 100%;">
+  <div class="card-body">
+    <h5 class="card-title">{{ question?.content }}</h5>
+    <div class="card-text">
+      <small>Answer:</small>
+      <p class="mt-2">{{ answer?.content }}</p>
+    </div>
+
+    <a *ngIf="isOwnedByCurrentUser && answer === null" class="btn btn-primary m-2" data-bs-toggle="modal" attr.data-bs-target="#answerModal-{{question?._id}}" (click)="modalMode = 'add'">Add Answer</a>
+    <a *ngIf="isOwnedByCurrentUser && answer !== null" class="btn btn-primary m-2" data-bs-toggle="modal" attr.data-bs-target="#answerModal-{{question?._id}}" (click)="modalMode = 'edit'; newAnswerContent = answer?.content">Edit Answer</a>
+    <a *ngIf="isOwnedByCurrentUser && answer !== null" class="btn btn-danger m-2" (click)="deleteAnswer()">Delete Answer</a>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="answerModal-{{question?._id}}" tabindex="-1" aria-labelledby="answerModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="answerModalLabel">Answer Form</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="submit-form m-4">
+          <div class="mb-3 row">
+            <p>{{question?.content}}</p>
+          </div>
+          <div class="mb-3 row">
+            <label for="question" class="col-sm-2 col-form-label">Answer:</label>
+            <div class="col-sm-10">
+              <input type="text" class="form-control" id="question" [(ngModel)]="newAnswerContent" />
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" id="close-modal-{{question?._id}}" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" (click)="modalMode === 'add' ? submitAnswer() : editAnswer()">Submit</button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -5,7 +5,7 @@ import { environment } from '../../environments/environment';
 import { Advertisement } from '../models/advertisement.model';
 import { Category } from '../models/category.model';
 
-const baseUrl = `${environment.apiBaseUrl}/advertisements`;
+const baseUrl = `${environment.apiBaseUrl}/categories`;
 @Injectable({
   providedIn: 'root'
 })

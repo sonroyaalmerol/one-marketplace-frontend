@@ -1,0 +1,46 @@
+<div class="row my-4">
+  <div class="col-sm-4">
+    <img class="card-img-top" src="https://ui-avatars.com/api/?name={{ advertisement.title }}" alt="{{ advertisement.title }}">
+  </div>
+  <div class="col-sm-8">
+    <h1>{{ advertisement.title }}</h1>
+    <h2 class="my-4">{{ price }}</h2>
+    <small>Advertised by: <a href="/profiles/{{ owner?._id }}" type="button" class="btn btn-light">{{ owner?.firstName }} {{ owner?.lastName }}</a></small>
+    <p class="my-4">{{ advertisement.description }}</p>
+    <p class="my-4">Location: {{ advertisement.location }}</p>
+    <button type="button" class="btn btn-primary" *ngIf="!isOwnedByCurrentUser" data-bs-toggle="modal" data-bs-target="#inquireModal">Inquire</button>
+    <a type="button" class="btn btn-primary" *ngIf="isOwnedByCurrentUser" href="/advertisements/{{ advertisement._id }}/edit">Edit</a>
+    <button type="button" class="btn btn-danger ms-2" *ngIf="isOwnedByCurrentUser" (click)="deleteAdvertisement()">Delete Advertisement</button>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="inquireModal" tabindex="-1" aria-labelledby="inquireModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="inquireModalLabel">Inquire Form</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="submit-form m-4">
+          <div class="mb-3 row">
+            <label for="question" class="col-sm-2 col-form-label">Question</label>
+            <div class="col-sm-10">
+              <input type="text" class="form-control" id="question" [(ngModel)]="newQuestionContent" />
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" id="close-modal" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" (click)="submitQuestion()">Submit</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<h3 *ngIf="(questions ?? []).length > 0">Inquiries:</h3>
+<div *ngFor="let question of questions">
+  <app-question-card [question]="question" [advertisement]="advertisement"></app-question-card>
+</div>

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 import { AuthService } from '../../services/auth.service';
 
 @Component({
@@ -21,7 +22,8 @@ export class RegisterComponent implements OnInit {
 
   constructor(
     private authService: AuthService, 
-    private router: Router
+    private router: Router,
+    private toast: ToastrService
   ) { }
 
   ngOnInit(): void {
@@ -44,9 +46,10 @@ export class RegisterComponent implements OnInit {
     if (toSubmit.password === this.register.confirmPassword) {
       this.authService.register(toSubmit).subscribe((res: any) => {
         if (res.success) {
+          this.toast.success('Successfully registered user!', 'Success!');
           this.router.navigate(['/login']);
         } else {
-          window.alert(res.message);
+          this.toast.error(res.message, 'Error!');
         }
       });
     }

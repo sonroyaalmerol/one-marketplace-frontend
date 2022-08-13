@@ -1,0 +1,13 @@
+<div class="card" style="width: 100%;">
+  <img class="card-img-top" src="https://ui-avatars.com/api/?name={{ advertisement?.title }}" alt="{{ advertisement?.title }}">
+  <div class="card-body">
+    <h5 class="card-title">{{ advertisement?.title }}</h5>
+    <div class="card-text">
+      <small>Owner: {{ owner?.firstName }} {{ owner?.lastName }}</small>
+      <p class="mt-2">{{ advertisement?.description }}</p>
+    </div>
+
+    <h2 class="card-title">{{ price }}</h2>
+    <a href="/advertisements/{{ advertisement?._id }}" class="btn btn-primary mt-4">More details</a>
+  </div>
+</div>

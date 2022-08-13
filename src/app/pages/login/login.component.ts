@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 import { AuthService } from '../../services/auth.service';
 
 @Component({
@@ -17,7 +18,8 @@ export class LoginComponent implements OnInit {
 
   constructor(
     private authService: AuthService, 
-    private router: Router
+    private router: Router,
+    private toast: ToastrService
   ) { }
 
   ngOnInit(): void {
@@ -31,12 +33,12 @@ export class LoginComponent implements OnInit {
         next: (res) => {
           console.log(res);
           this.submitting = false;
-          window.alert("Successfully logged in!");
+          this.toast.success('Successfully logged in!', 'Success!');
           this.router.navigate(['/']);
         },
         error: (e) => {
           console.error(e)
-          window.alert(e.message);
+          this.toast.error(e.message, 'Error!');
           this.submitting = false;
         }
       });
